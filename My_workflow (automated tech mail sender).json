@@ -1,0 +1,130 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 0 9 * * 1-5\t"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -200,
+        120
+      ],
+      "id": "fcfa621f-7277-4c90-aa63-9734760496bd",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "fromEmail": "ramn8n05@gmail.com",
+        "toEmail": "havocrahul2804@gmail.com , akashabinesh03@gmail.com",
+        "subject": "\t📰 Today’s Top 10 Tech News",
+        "html": "={{$json[\"html\"]}}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        460,
+        20
+      ],
+      "id": "5222b1a4-2b8c-429c-85b3-2c29a867bdbe",
+      "name": "Send Email",
+      "webhookId": "6e28f38b-3757-4eb9-bb40-95b4ffd0036d",
+      "credentials": {
+        "smtp": {
+          "id": "rNRme3aAvk4yckga",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://newsapi.org/v2/top-headlines?category=technology&pageSize=10&country=us&apiKey=51cc98965f8543fc8cce5d9144b2bfcf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "48de4f93-cb10-454b-8133-d9516d328539",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "function getRandomItems(arr, n) {\n  const shuffled = arr.sort(() => 0.5 - Math.random());\n  return shuffled.slice(0, n);\n}\n\nconst allArticles = $input.first().json.articles || [];\nconst selectedArticles = getRandomItems(allArticles, 10);\n\nlet html = `<h2>📰 Today's Top 10 Tech News! - ${new Date().toLocaleDateString()}</h2><ol>`;\n\nfor (const article of selectedArticles) {\n  html += `<li>\n    <a href=\"${article.url}\" target=\"_blank\"><strong>${article.title}</strong></a><br>\n    <small>Source: ${article.source.name}</small>\n  </li><br>`;\n}\n\nhtml += `</ol><p>🧠 Keep exploring!<br>— Ram’s AI Tech Bot</p>`;\n\nreturn [{ json: { html } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        200,
+        140
+      ],
+      "id": "651ad53b-95ca-47e4-88ed-38b35de31465",
+      "name": "Code"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "65b75710-47f8-4684-90e0-e893b240d333",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "43b271bbdde5a5aa750f8000d3bc2b49603548ecfac74fd2152d4add0e7eff29"
+  },
+  "id": "QoGIc6MD7xtc75Ve",
+  "tags": [
+    {
+      "name": "my first n8n project",
+      "id": "VNBMZkZVDfr7gTv2",
+      "createdAt": "2025-06-21T05:19:00.671Z",
+      "updatedAt": "2025-06-21T05:19:00.671Z"
+    }
+  ]
+}
