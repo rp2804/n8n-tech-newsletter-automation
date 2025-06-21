@@ -17,6 +17,7 @@ This project fetches the top 50 tech headlines, picks 10 at random, formats them
 ---
 
 ## 🧩 Workflow Overview
+```plaintext
 
 [Schedule Trigger]
         ↓
